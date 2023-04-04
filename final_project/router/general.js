@@ -4,6 +4,37 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
+const getBookByAsync = async({isbn, author, title}) => {
+  return new Promise((resolve, reject) => {
+    var book;
+    if (isbn) {
+      book = books[isbn];
+    } else if (author) {
+      for (let key in books) {
+        if (books[key].author === author) {
+          book = books[key];
+          break;
+        }
+      }
+    } else if (title) {
+      for (let key in books) {
+        if (books[key].title === title) {
+          book = books[key];
+          break;
+        }
+      }
+    }
+
+    resolve(book);
+  });
+}
+
+const getBooksAsync = async() => {
+  return new Promise((resolve, reject) => {
+    resolve(books);
+  });
+}
+
 public_users.post("/register", (req,res) => {
   //Write your code here
   const username = req.body.username;
